@@ -1,0 +1,134 @@
+@charset "UTF-8";
+
+#product-detail {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -20%);
+    display: none;
+    z-index: 9999;
+    background-color: #ffffff;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+    width: 30%;
+    border-radius: 10px;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+#product-detail h3 {
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center;
+}
+
+#product-detail p {
+    margin: 10px 0;    
+    color: #555;
+}
+
+#product-detail img {
+    max-width: 100px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    transition: transform 0.3s ease;
+}
+h1{
+	margin-top: 40px;
+}
+
+#product-detail img:hover {
+    transform: scale(1.1);
+}
+
+#close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    color: #666;
+    cursor: pointer;
+}
+
+#close-btn:hover {
+    color: #000;
+}
+
+h1{
+	margin-top: 40px;
+}
+
+.button_approve button{
+	height: 36px;
+    width: 115px;
+	border: none;
+	border-radius: 5px;
+	padding: 0px 10px;
+	color: #fff;
+}
+
+.view-detail{
+	background-color: blue;
+}
+
+.approve{
+	background-color: green;
+}
+
+
+
+.topbar {
+    background: white;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.topbar .nav-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #4e73df;
+    margin-left: 20px;
+}
+
+.topbar .nav-link img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+.topbar .nav-link span {
+    margin-right: 10px;
+    color: #6c757d;
+}
+
+.topbar .back {
+    margin-right: auto; /* Đẩy icon sang bên phải */
+    font-size: 20px; /* Kích thước icon */
+    color: #4e73df; /* Màu sắc icon */
+    text-decoration: none; /* Xóa gạch chân */
+        margin-left: 25px;
+}
+
+/* Hiệu ứng khi rê chuột qua icon "back" */
+.topbar .back:hover {
+    color: #2e59d9; /* Màu khi hover */
+    transform: scale(1.1); /* Phóng to nhẹ */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

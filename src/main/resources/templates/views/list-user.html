@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="/css/list-user.css" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<title>List users</title>
+
+<script>
+   function confirmDelete(event, deleteUrl) {
+	    event.preventDefault();
+	    
+	    const confirmation = confirm("Bạn có chắc chắn muốn xóa người dùng này không?");
+	    if (confirmation) {
+	        fetch(deleteUrl, {
+	            method: 'DELETE',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json'
+	            }
+	        })
+	        .then(response => {
+	            if (response.ok) {
+	                alert("Người dùng đã được xóa.");
+	                window.location.reload();
+	            } else {
+	                alert("Có lỗi xảy ra khi xóa người dùng.");
+	            }
+	        })
+	        .catch(error => {
+	            console.error("Lỗi khi xóa người dùng: ", error);
+	            alert("Có lỗi xảy ra khi xóa người dùng.");
+	        });
+	    }
+	}
+
+
+</script>
+
+
+</head>
+
+<body>
+	<div id="wrapper">
+
+		<!-- Content Wrapper -->
+		<div id="content-wrapper">
+			<!-- Topbar -->
+			<nav class="topbar">
+				<a class="back" href="/list-post"> <i class="fa fa-arrow-circle-left"
+					aria-hidden="true"></i>
+				</a> <a href="#" class="nav-link">
+					<p th:if="${session.user != null}" th:text="${session.user.name}">Account</p>
+					<p th:if="${session.user == null}">Account</p>
+				</a>
+			</nav>
+
+			<!-- Main Content -->
+			<form method="GET" action="/list-user">
+				<input type="text" name="search"
+					placeholder="Tìm kiếm tên hoặc email">
+				<button type="submit">Tìm kiếm</button>
+			</form>
+			<div class="container-fluid">
+				<h1>Danh sách người dùng</h1>
+				<table>
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Tên</th>
+							<th>Email</th>
+							<th>Ngày sinh</th>
+							<th>Số điện thoại</th>
+							<th>Hành động</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="user : ${users}">
+							<td th:text="${user.id}"></td>
+							<td th:text="${user.name}"></td>
+							<td th:text="${user.email}"></td>
+							<td th:text="${user.dateOfBirth}"></td>
+							<td th:text="${user.phoneNumber}"></td>
+							<td><a href="#"
+								th:href="@{/list-user/delete/{id}(id=${user.id})}"
+								th:onclick="'confirmDelete(event, \'' + @{/list-user/delete/{id}(id=${user.id})} + '\')'">
+									<i class="fa fa-trash"></i> Xóa
+							</a></td>
+						</tr>
+
+					</tbody>
+				</table>
+
+				<div class="pagination">
+					<ul>
+						<li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"><a
+							th:href="@{'/list-user'(page=${i}, size=${size}, search=${search})}"
+							th:text="${i + 1}"
+							th:classappend="${i == currentPage} ? 'active' : ''"></a></li>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

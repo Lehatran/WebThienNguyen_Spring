@@ -1,0 +1,272 @@
+<!DOCTYPE html>  
+<html lang="en" xmlns:th="http://www.thymeleaf.org">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<link rel="stylesheet" href="/css/create-products.css">  
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<title>Đăng Tin Sản Phẩm</title>  
+ <style>  
+    .form-row {  
+        display: flex;  
+        align-items: center;  
+        margin-bottom: 15px;  
+    }  
+    .form-group {  
+        flex: 1;  
+        margin-right: 10px;  
+    }  
+    .form-group:last-child {  
+        margin-right: 0;  
+    }  
+    .image-preview {  
+        display: flex;  
+        gap: 10px;  
+        margin-top: 10px;  
+        flex-wrap: wrap; /* Kẻo hình ảnh xuống dòng nếu không đủ chỗ */  
+    }  
+    /* Style cho input, select, textarea */  
+    input[type="text"],  
+    input[type="date"],  
+    input[type="number"],  
+    select,  
+    textarea {  
+        width: 100%;  
+        padding: 8px;  
+        box-sizing: border-box;  
+    }  
+    button {  
+        padding: 10px 15px;  
+        cursor: pointer; /* Con trỏ chuột thành hình tay khi di chuột vào nút */  
+    }  
+</style> 
+</head>  
+<body>  
+    <nav class="topbar">
+        <a class="back" href="/list-post">
+            <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+        </a>
+    </nav>
+    <h1 style="margin-top:20px">Đăng Tin Sản Phẩm</h1>  
+    <div class="form-container">  
+        <div th:if="${param.success}" class="alert alert-success show-toast">  
+            <p>Đăng sản phẩm thành công!</p>  
+        </div>  
+
+        <div th:if="${param.error}" class="alert alert-danger show-toast">  
+            <p>Có lỗi xảy ra khi đăng sản phẩm. Vui lòng thử lại!</p>  
+        </div>  
+
+        <form th:action="@{/products/create}" method="post" id="submit-form" enctype="multipart/form-data" onsubmit="return validateForm()">  
+            <div class="form-row">  
+                <div class="form-group">  
+                    <label for="name">Tên sản phẩm:</label>  
+                    <input type="text" name="name" id="name" required>  
+                </div>  
+                <div class="form-group">  
+                    <label for="id_category">Danh mục:</label>  
+                    <select name="id_category" id="id_category" required>  
+                        <option value="">Chọn danh mục</option>  
+                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>  
+                    </select>  
+                </div>  
+            </div>  
+
+            <div class="form-row">  
+                <div class="form-group">  
+                    <label for="description">Mô tả:</label>  
+                    <textarea name="description" id="description" required></textarea>  
+                </div>  
+                <div class="form-group">  
+                    <label for="price">Giá:</label>  
+                    <input type="number" name="price" id="price" required>  
+                </div>  
+            </div>  
+
+            <div class="form-row">  
+                <div class="form-group">  
+                    <label for="createdDate">Ngày tạo:</label>  
+                    <input type="date" name="createdDate" id="createdDate" required>  
+                </div>  
+                <div class="form-group">  
+                    <label for="status">Trạng thái:</label>                  
+                    <input type="text" name="status" id="status" required>                          
+                </div>  
+            </div>  
+
+            <div class="form-row">  
+                <div class="form-group">  
+                    <label for="province">Tỉnh/Thành phố:</label>  
+                    <select name="province" id="province" required onchange="updateProvinceName()">  
+					    <option value="">Chọn Tỉnh/Thành phố</option>  
+					    <option th:each="province : ${provinces}" th:data-name="${province.name}" th:value="${province.name}" th:text="${province.name}"></option>  
+					</select>
+				    <input type="hidden" name="provinceName" id="provinceName">
+                </div>  
+                <div class="form-group">  
+                    <label for="district">Quận/Huyện:</label>  
+				    <input type="hidden" name="provinceName" id="provinceName">
+                    <select name="district" id="district" required  onchange="updateDistrictName()">  
+                        <option value="">Chọn Quận/Huyện</option>  
+                        <option th:each="district : ${districts}" th:data-name="${district.name}" th:value="${district.name}" th:text="${district.name}"></option> 
+                    </select>  
+                    <input type="hidden" name="districtName" id="districtName">
+                </div>  
+                <div class="form-group">  
+                    <label for="ward">Phường/Xã:</label>  
+                    <select name="ward" id="ward" required onchange="updateWardName()">  
+                        <option value="">Chọn Phường/Xã</option>  
+                        <option th:each="ward : ${wards}" th:value="${ward.name}" th:text="${ward.name}"></option>  
+                    </select>  
+                    <input type="hidden" name="wardName" id="wardName">
+                </div>  
+            </div>  
+            <div class="form-row">  
+                <div class="form-group">  
+                    <label for="img">Hình ảnh:</label>  
+                    <input type="file" name="img" id="img" accept="image/*" multiple required>  
+                </div>  
+            </div>  
+
+            <div class="image-preview" id="imagePreviewContainer">  
+                <!-- Các hình ảnh xem trước sẽ được thêm vào đây bằng JavaScript -->  
+            </div>  
+
+            <div class="form-row">  
+                <div class="form-group">  
+                    <button type="submit">Đăng tin</button>  
+                </div>  
+            </div>  
+        </form>  
+    </div>  
+
+<script>  
+    let uploadedFiles = []; // Mảng để lưu trữ các file đã tải lên  
+
+    document.getElementById('img').addEventListener('change', function (event) {  
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');  
+        imagePreviewContainer.innerHTML = ''; // Xóa hình ảnh trước đó nếu có  
+        uploadedFiles = Array.from(event.target.files); // Cập nhật mảng với các file mới  
+
+        // Kiểm tra điều kiện số lượng hình ảnh  
+        if (uploadedFiles.length < 4) {  
+            alert("Bạn phải tải lên ít nhất 4 hình ảnh.");  
+            return;  
+        }  
+        if (uploadedFiles.length > 8) {  
+            alert("Bạn chỉ được tải lên tối đa 8 hình ảnh.");  
+            return;  
+        }  
+
+        renderImagePreviews(uploadedFiles);  
+    });  
+
+    function renderImagePreviews(files) {  
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');  
+        imagePreviewContainer.innerHTML = ''; // Xóa trước để render lại  
+
+        files.forEach((file, index) => {  
+            const reader = new FileReader();  
+            reader.onload = function (e) {  
+                const imgContainer = document.createElement('div');  
+                imgContainer.style.position = 'relative';  
+
+                const img = document.createElement('img');  
+                img.src = e.target.result;  
+                img.style.width = '100px';  
+                img.style.height = '100px';  
+                img.style.objectFit = 'cover';  
+                img.style.marginRight = '10px';  
+                img.style.border = '1px solid #ccc';  
+
+                const removeBtn = document.createElement('button'); // Tạo nút x  
+                removeBtn.innerText = 'x';  
+                removeBtn.style.position = 'absolute';  
+                removeBtn.style.top = '0';  
+                removeBtn.style.right = '0';  
+                removeBtn.style.backgroundColor = 'red';  
+                removeBtn.style.color = 'white';  
+                removeBtn.style.border = 'none';  
+                removeBtn.style.cursor = 'pointer';  
+                removeBtn.style.padding = '0 5px';  
+
+                removeBtn.addEventListener('click', function () {  
+                    imgContainer.remove();  
+                    uploadedFiles.splice(index, 1); // Xóa file khỏi mảng dựa trên index  
+                    updateFileInput(); // Cập nhật input file để phản ánh số lượng đã xóa  
+
+                    // Kiểm tra lại điều kiện nếu không còn hình nào  
+                    if (uploadedFiles.length < 4) {  
+                        alert("Bạn phải tải lên ít nhất 4 hình ảnh.");  
+                    }  
+                });  
+
+                imgContainer.appendChild(img);  
+                imgContainer.appendChild(removeBtn);  
+                imagePreviewContainer.appendChild(imgContainer);  
+            }  
+            reader.readAsDataURL(file); // Đọc file  
+        });  
+    }  
+
+    function updateFileInput() {  
+        const fileInput = document.getElementById('img');  
+        const dataTransfer = new DataTransfer();  
+        uploadedFiles.forEach(file => {  
+            dataTransfer.items.add(file);  
+        });  
+        fileInput.files = dataTransfer.files; // Cập nhật input file với các file còn lại  
+    }  
+
+    function validateForm() {  
+        const createdDate = new Date(document.getElementById('createdDate').value);  
+        const today = new Date();  
+
+        // Kiểm tra nếu ngày tạo lớn hơn ngày hiện tại  
+         if (createdDate > today) {  
+            alert("Ngày tạo không được lớn hơn ngày hiện tại.");  
+            return false;   
+        } 
+        
+        // Kiểm tra số lượng hình ảnh trước khi submit  
+        if (uploadedFiles.length < 4 || uploadedFiles.length > 8) {  
+            alert("Bạn phải tải lên từ 4 đến 8 hình ảnh.");  
+            return false; 
+        }  
+
+        return true; // Nếu tất cả đều ổn, cho phép gửi biểu mẫu  
+    }  
+    
+    function updateProvinceName() {
+        var provinceSelect = document.getElementById('province');
+        var selectedProvince = provinceSelect.options[provinceSelect.selectedIndex].text;
+
+        // Cập nhật giá trị của thẻ <p>
+        document.getElementById('provinceName').innerText = selectedProvince;
+        document.getElementById('provinceName').value = selectedProvince;
+
+    }
+    
+    function updateDistrictName() {
+        var districtSelect = document.getElementById('district');
+        var selectedDistrict = districtSelect.options[districtSelect.selectedIndex].text;
+
+        // Cập nhật giá trị của thẻ <p>
+        document.getElementById('districtName').innerText = selectedDistrict;
+        document.getElementById('districtName').value = selectedDistrict;
+
+    }
+    function updateWardName() {
+        var wardSelect = document.getElementById('ward');
+        var selectedWard = wardSelect.options[wardSelect.selectedIndex].text;
+
+        // Cập nhật giá trị của thẻ <p>
+        document.getElementById('wardName').innerText = selectedWard;
+        document.getElementById('wardName').value = selectedWard;
+    }
+</script>  
+    <script src="/js/address.js"></script>  
+</body>  
+</html>

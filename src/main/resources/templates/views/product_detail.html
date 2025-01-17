@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết sản phẩm</title>
+    <link rel="stylesheet" href="/css/product_detail.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+	<!-- Thêm JS của Leaflet -->
+	<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/navbar.js"></script>
+</head>
+<body>
+ 	<div th:replace="~{views/navbar :: navbar}"></div>
+
+<div class="container"> 
+        <div class="container_inf">
+            <div class="inf_product">
+                <div class="img">
+                    <!-- Hình ảnh sản phẩm -->
+                    <div id="image-slider">
+					   <!-- Hiển thị hình ảnh -->
+					   <img id="current-image" th:src="${product.images[0]}" alt="Product Image" />
+					
+					   <!-- Nút điều hướng -->
+					   <button id="prev-button" onclick="prevImage()">&#8592;</button>
+					   <button id="next-button" onclick="nextImage()">&#8594;</button>
+					</div>
+					   
+
+                </div>
+                <div class="detail">
+                    <p class="pro_des" th:text="${product.name}"> Tên sản phẩm </p>
+                    <div class="price-day">
+                        <div class="price">
+                            <img src="/images/icon_money.png"/>
+                            <p th:text="${product.price}">Giá</p>
+                        </div>
+                        <div class="day">
+                            <img src="/images/icon_day.png"/>
+                           <!--  <p th:text="${product.create_day}">Ngay</p> -->
+                           <p th:text="${#dates.format(product.create_day, 'yyyy-MM-dd')}">Ngày</p>
+                           
+                        </div>
+                    </div>
+                </div>
+                <div class="intro">
+                    <div class="web_name">
+                        <i class="bi bi-cart-fill"></i>
+                        <p>WebThienNguyen</p>
+                    </div>
+                    <div class="cash">
+                        <i class="bi bi-cash-stack"></i>
+                        <p>Tiền của bạn được an toàn và được thanh toán vào đúng thời điểm</p>
+                    </div>
+                    <div class="tool">
+                        <i class="bi bi-tools"></i>
+                        <p>Dịch vụ khách hàng tận tâm của chúng tôi hỗ trợ bạn</p>
+                    </div>
+                    <div class="des_pro">
+                        <p>Mô tả sản phẩm</p>
+                        <p th:text="${product.description}"></p>
+                    </div>
+                    <div class="maintain">
+                        <p>Tiêu chuẩn</p>
+                        <div class="inf_maintain">
+                            <div class="inf_status">
+                                <div class="status_title">
+                                    <img src="/images/icon_like.png"/>
+                                    <p>Trạng thái</p>
+                                </div>
+                                <p th:text="${product.status}">Trạng thái</p>
+                            </div>
+                            <div class="inf_category">
+                                <div class="category_title">
+                                    <img src="/images/icon_category.png"/>
+                                    <p>Danh mục</p>
+                                </div>
+                                <p th:text="${product.id_category.name}">Danh muc</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="map">
+                        <div class="inf">
+                            <img src="/images/icon_address.jpg"/>
+                            <p>Địa chỉ</p>
+                        </div>
+                        <div class="img" id="map" style="height: 400px; width: 100%;"></div>
+                    </div>
+                </div>
+            </div>  
+            <div class="inf_user">
+                <p class="user_name" th:text="${product.id_user.name}">User name</p>
+                <div class="button_contact">
+                    <button class="button_phone">
+                        <a href="tel:${product.id_user.phoneNumber}" class="call_button">
+                            <img class="icon_phone" src="/images/icon_tel.jpg" alt="Gọi điện" />
+                            <p th:text="${product.id_user.phoneNumber}">SDT</p>
+                        </a>
+                    </button>       
+                    <button class="button_zalo">
+                        <a href="https://zalo.me/${product.id_user.phoneNumber}" target="_blank" class="btn btn-primary">
+                            Liên hệ Zalo
+                        </a>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script th:inline="javascript">
+var address = /*[[${product.id_address.ward} + ', ' + ${product.id_address.district} + ', ' + ${product.id_address.province}]]*/
+	function fetchCoordinates(address) {
+    return fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
+        .then(response => response.json());
+}
+fetchCoordinates(address)
+    .then(data => {
+        if (data && data.length > 0) {
+            var lat = data[0].lat; // Lấy latitude Vĩ độ
+            var lon = data[0].lon; // Lấy longitude Kinh độ 
+
+            // Hiển thị bản đồ
+            var map = L.map('map').setView([lat, lon], 13);
+
+            // Thêm layer OpenStreetMap(hiển thị rõ đường phố)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Thêm marker(icon address chỉ rõ)
+            L.marker([lat, lon]).addTo(map)
+                .bindPopup(address)
+                .openPopup();
+        } else {
+            // Nếu không tìm thấy với địa chỉ đầy đủ, thử tìm chỉ với huyện và tỉnh
+            var districtProvince = /*[[${product.id_address.district} + ', ' + ${product.id_address.province}]]*/
+            return fetchCoordinates(districtProvince)
+                .then(data => {
+                    if (data && data.length > 0) {
+                        var lat = data[0].lat; // Lấy latitude
+                        var lon = data[0].lon; // Lấy longitude
+
+                        // Hiển thị bản đồ, 13: hiển thị địa chỉ của 1 khu vực thường là 1 thành phố hay vùng nhỏ
+                        var map = L.map('map').setView([lat, lon], 13);
+
+                        // Thêm layer OpenStreetMap
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; OpenStreetMap contributors'
+                        }).addTo(map);
+
+                        // Thêm marker
+                        L.marker([lat, lon]).addTo(map)
+                            .bindPopup(districtProvince)
+                            .openPopup();
+                    } else {
+                        alert("Không tìm thấy vị trí!");
+                    }
+                })
+                .catch(error => {
+                    console.error("Có lỗi khi lấy dữ liệu từ Nominatim:", error);
+                });
+        }
+    })
+    .catch(error => {
+        console.error("Có lỗi khi lấy dữ liệu từ Nominatim:", error);
+    });
+    
+    const images = /*[[${product.images}]]*/ [];
+    let currentIndex = 0;
+
+    // Cập nhật hình ảnh
+    function updateImage() {
+        const currentImage = document.getElementById('current-image');
+        currentImage.src = images[currentIndex];
+    }
+
+    // Chuyển sang hình trước
+    function prevImage() {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        updateImage();
+    }
+
+    // Chuyển sang hình tiếp theo
+    function nextImage() {
+        currentIndex = (currentIndex + 1) % images.length;
+        updateImage();
+    }
+
+    // Đảm bảo hình ảnh đầu tiên được hiển thị khi tải trang
+    document.addEventListener('DOMContentLoaded', () => {
+        updateImage();
+    });
+</script>
+

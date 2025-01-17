@@ -1,0 +1,211 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin: 20px 0;
+}
+
+.form-container {
+    width: 60%;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    flex: 1;
+    margin-right: 15px;
+}
+
+.form-group:last-child {
+    margin-right: 0;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+    height: 80px;
+}
+
+button[type="submit"] {
+    background-color: #f07b42;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button[type="submit"]:hover {
+    background-color: #d96d39;
+}
+
+button[type="submit"]:active {
+    background-color: #b8572e;
+}
+
+button.close-btn{
+    background-color: red;
+    color: white;
+    font-size: 16px;
+}
+
+#preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#preview-container .image-wrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+
+#preview-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#preview-container .close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+.image-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.image-row input {
+    margin-bottom: 10px;
+}
+
+.alert {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;  /* Đặt ở góc phải */
+    opacity: 0; /* Ban đầu ẩn */
+    transform: translateX(100%); /* Ban đầu dịch chuyển hoàn toàn ra ngoài màn hình */
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; /* Hiệu ứng ẩn và di chuyển */
+    z-index: 9999;
+    width: 250px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Toast hiển thị */
+.show-toast {
+    opacity: 1;
+    transform: translateX(0); /* Di chuyển vào màn hình */
+}
+
+/* Toast ẩn khi hết thời gian */
+.hide-toast {
+    opacity: 0;
+    transform: translateX(100%); /* Di chuyển ra ngoài màn hình */
+}
+
+
+
+.topbar {
+    background: white;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.topbar .nav-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #4e73df;
+    margin-left: 20px;
+}
+
+.topbar .nav-link img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+.topbar .nav-link span {
+    margin-right: 10px;
+    color: #6c757d;
+}
+
+.topbar .back {
+    margin-right: auto; /* Đẩy icon sang bên phải */
+    font-size: 20px; /* Kích thước icon */
+    color: #4e73df; /* Màu sắc icon */
+    text-decoration: none; /* Xóa gạch chân */
+        margin-left: 25px;
+}
+
+/* Hiệu ứng khi rê chuột qua icon "back" */
+.topbar .back:hover {
+    color: #2e59d9; /* Màu khi hover */
+    transform: scale(1.1); /* Phóng to nhẹ */
+}
+
+
+
+

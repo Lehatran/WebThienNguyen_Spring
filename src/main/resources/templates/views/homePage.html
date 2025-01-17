@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="/css/homePage.css" />
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="content">
+    <div class="name_web">
+        <p>ThienNguyen</p>
+    </div>
+    <div class="add_post">
+        <p>Thêm bài đăng cho sản phẩm</p>
+        <img class="hoatiet1" src="/images/icon_hoatiet2.webp"/>
+        <img class="hoatiet2" src="/images/icon_hoatiet3.png"/>
+        <div class="post">
+    <a href="/products/create" th:href="@{/products/create}"  th:if="${session.user != null}"
+   th:classappend="${session.user.role == true ? 'disabled' : ''}">
+    <button th:disabled="${session.user.role == true}">
+        <p class="icon_add">+</p>
+        <p class="text_add">Thêm bài đăng</p>
+    </button>
+</a>
+
+</div>
+
+    </div>
+</div>
+</body>
+</html>

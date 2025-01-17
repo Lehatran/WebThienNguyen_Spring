@@ -1,0 +1,77 @@
+
+body {
+    font-family: "Arial", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.content{
+	padding-right: 230px;
+    padding-left: 230px;
+	margin-top: 150px;
+}
+
+.content .name_web,
+.content .add_post{
+	margin-top: -108px;
+	display: flex;
+	height: 250px;
+	font-size: 50px;
+	color: grey;
+	background-color: #f1f2f5;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+}
+
+.content .add_post{
+	position: relative;
+	flex-direction: column;
+	background-color: #f9f2d5;
+	height: 120px;
+	border-radius: 10px;
+	font-size: 26px;
+	color: #000;
+	padding-top: -20px;
+	overflow: hidden;
+	margin-top:8px;
+}
+
+.content .add_post>p{
+	margin-top: -10px;
+}
+
+.content .add_post .post{
+	margin-top:-10px;
+}
+
+.content .add_post .hoatiet1,
+.content .add_post .hoatiet2{
+	position: absolute;
+	width: 200px;
+	left:-50px;
+	top: -40px;
+	transform: rotate(17deg);
+}
+
+.content .add_post .hoatiet2{
+	left:85.5%;
+	top: 8px;
+	transform: rotate(260deg);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

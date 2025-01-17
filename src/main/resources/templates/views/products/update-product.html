@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="/css/create-products.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<title>Cập Nhật Sản Phẩm</title>
+<style>
+.form-row {
+	display: flex;
+	align-items: center;
+	margin-bottom: 15px;
+}
+
+.form-group {
+	flex: 1;
+	margin-right: 10px;
+}
+
+.form-group:last-child {
+	margin-right: 0;
+}
+
+.image-preview {
+	display: flex;
+	gap: 10px;
+	margin-top: 10px;
+	flex-wrap: wrap;
+}
+
+input[type="text"], input[type="date"], input[type="number"], select,
+	textarea {
+	width: 100%;
+	padding: 8px;
+	box-sizing: border-box;
+}
+
+button {
+	padding: 10px 15px;
+	cursor: pointer;
+}
+/* Đảm bảo hình ảnh có kích thước đồng nhất */
+.img-container img {
+	width: 100px; /* Kích thước cố định cho ảnh */
+	height: 100px; /* Kích thước cố định cho ảnh */
+	object-fit: cover; /* Giữ tỷ lệ hình ảnh mà không làm biến dạng */
+}
+
+/* Đặt nút xóa vào góc trên bên phải */
+.btn-delete {
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-color: red;
+	color: white;
+	border: none;
+	cursor: pointer;
+	padding: 5px;
+	font-size: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Style cho các container ảnh */
+.img-container {
+	display: inline-block;
+	margin: 5px;
+	position: relative;
+}
+</style>
+</head>
+<body>
+    <nav class="topbar">
+        <a class="back" href="/list-products-by-user">
+            <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+        </a>
+    </nav>
+	<h1>Cập Nhật Sản Phẩm</h1>
+	<div class="form-container">
+		<div th:if="${param.success}" class="alert alert-success show-toast">
+			<p>Cập nhật sản phẩm thành công!</p>
+		</div>
+		<div th:if="${param.error}" class="alert alert-danger show-toast">
+			<p>Có lỗi xảy ra khi cập nhật sản phẩm. Vui lòng thử lại!</p>
+		</div>
+		<form th:action="@{/products/update/{id}(id=${product.id})}"
+			method="post" id="submit-form" enctype="multipart/form-data"
+			onsubmit="return validateForm()">
+			<input type="hidden" name="id" th:value="${product.id}">
+			<div class="form-row">
+				<div class="form-group">
+					<label for="name">Tên sản phẩm:</label> <input type="text"
+						name="name" id="name" th:value="${product.name}" required>
+				</div>
+				<div class="form-group">
+					<label for="id_category">Danh mục:</label> <select
+						name="id_category" id="id_category" required>
+						<option value="">Chọn danh mục</option>
+						<option th:each="category : ${categories}"
+							th:value="${category.id}" th:text="${category.name}"
+							th:selected="${category.id == product.id_category.id}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group">
+					<label for="description">Mô tả:</label>
+					<textarea name="description" id="description" required
+						th:text="${product.description}"></textarea>
+				</div>
+				<div class="form-group">
+					<label for="price">Giá:</label> <input type="number" name="price"
+						id="price" th:value="${product.price}" required>
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group">
+					<label for="createdDate">Ngày tạo:</label> <input type="date"
+						name="createdDate" id="createdDate"
+						th:value="${#dates.format(product.create_day, 'yyyy-MM-dd')}"
+						required>
+				</div>
+				<div class="form-group">
+					<label for="status">Trạng thái:</label> <input type="text"
+						name="status" id="status" th:value="${product.status}" required>
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group">
+					<label for="province">Tỉnh/Thành phố:</label>
+					 <select  onchange="updateProvinceName()" data-default-value-province="${address.province}"
+						name="province" id="province">
+						<option value="">Chọn Tỉnh/Thành phố</option>
+						<!-- Hiển thị giá trị đã chọn sẵn -->
+						<option th:value="${address.province}"
+							th:text="${address.province}" selected></option>
+						<!-- Hiển thị danh sách tỉnh còn lại -->
+						<option th:each="province : ${provinces}" th:value="${province}"
+							th:text="${province}"></option>
+					</select>
+					<input type="hidden" name="provinceName" id="provinceName">
+				</div>
+				<div class="form-group">
+					<label for="district">Quận/Huyện:</label> 
+					<select name="district" onchange="updateDistrictName()"
+						id="district" data-default-value-district="${district.district}">
+						<option value="">Chọn Quận/Huyện</option>
+						<option th:each="district : ${districts}"
+							th:value="${district.district}" th:text="${district.district}"
+							th:selected="${district.district} == ${address.district}">
+						</option>
+					</select>
+					<input type="hidden" name="districtName" id="districtName">
+				</div>
+				<div class="form-group">
+					<label for="ward">Phường/Xã:</label> 
+					<select name="ward" id="ward" onchange="updateWardName()" data-default-value-ward="${ward.ward}">
+						<option value="">Chọn Phường/Xã</option>
+						<option th:each="ward : ${wards}" th:value="${ward.ward}"
+							th:text="${ward.ward}"
+							th:selected="${ward.ward} == ${address.ward}"></option>
+					</select>
+					<input type="hidden" name="wardName" id="wardName">
+				</div>
+			</div>
+
+
+			<div class="form-row">
+				<div class="form-group">
+					<label for="img">Hình ảnh:</label> <input type="file"
+						name="new_img[]" id="img" accept="image/*" multiple>
+				</div>
+			</div>
+
+			<input type="hidden" name="removed_images" id="removed_images"
+				value="[]">
+			<div class="image-preview" id="imagePreviewContainer">
+				<div th:if="${imgPaths.length > 0}">
+					<div th:each="img : ${imgPaths}" class="img-container"
+						style="display: inline-block; margin: 5px; position: relative;">
+						<img th:src="${img}" alt="Không thể hiển thị ảnh"
+							style="width: 100px; height: 100px; object-fit: cover;" />
+						<button type="button" class="btn-delete" th:data-img="${img}"
+							onclick="deleteImage(this.dataset.img)"
+							style="position: absolute; top: 0; right: 0; background-color: red; color: white; border: none; cursor: pointer; padding: 0 5px;">
+							×</button>
+					</div>
+				</div>
+				<div th:if="${imgPaths.length == 0}">
+					<p>Không có hình ảnh nào được tải lên.</p>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<div class="form-group">
+					<button type="submit">Cập nhật</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<script>
+	window.onload = function() {
+	    // Gọi hàm khi trang tải lần đầu để gán giá trị mặc định nếu không có sự thay đổi
+	    updateProvinceName();
+	    updateDistrictName();
+	    updateWardName();
+	};
+
+	function updateProvinceName() {
+	    var provinceSelect = document.getElementById('province');
+	    const currentValue = provinceSelect.value; // Lấy giá trị đã chọn
+
+	    if (!currentValue) {
+	        // Nếu không có giá trị (nghĩa là không có lựa chọn), giữ giá trị mặc định
+	        var defaultProvince = provinceSelect.getAttribute("data-default-value-province");
+	        document.getElementById('provinceName').value = defaultProvince;
+	    } else {
+	        // Nếu có lựa chọn, cập nhật với giá trị đã chọn
+	        var selectedProvince = provinceSelect.options[provinceSelect.selectedIndex].text;
+	        document.getElementById('provinceName').value = selectedProvince;
+	    }
+	}
+
+		function updateDistrictName() {
+			var districtSelect = document.getElementById('district');
+			const currentValue = districtSelect.value;
+			 if (!currentValue) {
+		        // Nếu không có giá trị (nghĩa là không có lựa chọn), giữ giá trị mặc định
+		        var defaultDistrict = districtSelect.getAttribute("data-default-value-district");
+		        document.getElementById('districtName').value = defaultDistrict;
+		    } else {
+		        // Nếu có lựa chọn, cập nhật với giá trị đã chọn
+		        var selectedDistrict = districtSelect.options[districtSelect.selectedIndex].text;
+		        document.getElementById('districtName').value = selectedDistrict;
+		    }
+		}
+		function updateWardName() {
+			var wardSelect = document.getElementById('ward');
+			const currentValue = wardSelect.value;
+			 if (!currentValue) {
+		        // Nếu không có giá trị (nghĩa là không có lựa chọn), giữ giá trị mặc định
+		        var defaultWard = wardSelect.getAttribute("data-default-value-ward");
+		        document.getElementById('wardName').value = defaultWard;
+		    } else {
+		        // Nếu có lựa chọn, cập nhật với giá trị đã chọn
+		        var selectedWard = wardSelect.options[wardSelect.selectedIndex].text;
+		        document.getElementById('wardName').value = selectedWard;
+		    }
+		}
+	</script>
+	<script src="/js/address.js"></script>
+	<script>
+document.querySelector('form').addEventListener('submit', function(event) {
+    try {
+        const previewContainer = document.getElementById('imagePreviewContainer');
+        const newFiles = document.getElementById('img').files;
+
+        const existingImages = previewContainer.querySelectorAll('.img-container').length;
+        const totalImages = existingImages + newFiles.length;
+
+        if (totalImages < 4) {
+            alert('Bạn phải tải lên ít nhất 4 hình ảnh.');
+            event.preventDefault(); // Ngừng submit form nếu chưa đủ ảnh
+        }
+    } catch (error) {
+        console.error('Lỗi trong sự kiện submit:', error);
+        event.preventDefault(); // Dừng việc submit nếu có lỗi
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        const previewContainer = document.getElementById('imagePreviewContainer');
+        const removedImagesInput = document.getElementById('removed_images');
+
+        previewContainer.querySelectorAll('.btn-delete').forEach((button) => {
+            button.addEventListener('click', function() {
+                try {
+                    const wrapper = this.closest('.img-container');
+                    const imgPath = wrapper.querySelector('img').getAttribute('src'); // Lấy đường dẫn ảnh từ thẻ img
+
+                    // Cập nhật danh sách ảnh cần xóa
+                    const removedImages = JSON.parse(removedImagesInput.value || '[]');
+                    removedImages.push(imgPath);
+                    removedImagesInput.value = JSON.stringify(removedImages);
+
+                    // Xóa ảnh khỏi giao diện
+                    wrapper.remove();
+
+                    // Cập nhật lại các file đã chọn
+                    const input = document.getElementById('img');
+                    const newFiles = Array.from(input.files);
+                    const indexToRemove = Array.from(wrapper.parentNode.children).indexOf(wrapper);
+                    newFiles.splice(indexToRemove, 1);  // Xóa file tương ứng với ảnh bị xóa
+
+                    const dataTransfer = new DataTransfer();
+                    newFiles.forEach((file) => dataTransfer.items.add(file));
+                    input.files = dataTransfer.files;
+                } catch (deleteError) {
+                    console.error('Lỗi khi xóa ảnh:', deleteError);
+                }
+            });
+        });
+
+        document.getElementById('img').addEventListener('change', function(event) {
+            try {
+                const files = Array.from(event.target.files);
+                if (files.length === 0) return;
+
+                const previewContainer = document.getElementById('imagePreviewContainer');
+                const maxImages = 8;
+
+                // Nếu số lượng hình ảnh đã vượt quá giới hạn, xóa bớt ảnh cũ
+                if (previewContainer.children.length + files.length > maxImages) {
+                    const imagesToDelete = previewContainer.children.length + files.length - maxImages;
+
+                    // Xóa bớt các ảnh cũ
+                    for (let i = 0; i < imagesToDelete; i++) {
+                        previewContainer.removeChild(previewContainer.children[0]); // Xóa ảnh đầu tiên
+                    }
+                }
+
+                // Xử lý thêm ảnh mới vào preview
+                files.forEach((file, index) => {
+                    if (!file.type.startsWith('image/')) return;
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const imageWrapper = document.createElement('div');
+                        imageWrapper.classList.add('img-container');
+                        imageWrapper.setAttribute('data-file-index', index);
+
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+
+                        const closeButton = document.createElement('button');
+                        closeButton.classList.add('btn-delete');
+                        closeButton.innerText = '×';
+                        closeButton.addEventListener('click', function() {
+                            try {
+                                previewContainer.removeChild(imageWrapper);
+                                const newFiles = Array.from(document.getElementById('img').files);
+                                newFiles.splice(index, 1);
+                                const dataTransfer = new DataTransfer();
+                                newFiles.forEach((file) => dataTransfer.items.add(file));
+                                document.getElementById('img').files = dataTransfer.files;
+                            } catch (deleteFileError) {
+                                console.error('Lỗi khi xóa file:', deleteFileError);
+                            }
+                        });
+
+                        imageWrapper.appendChild(img);
+                        imageWrapper.appendChild(closeButton);
+                        previewContainer.appendChild(imageWrapper);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            } catch (changeError) {
+                console.error('Lỗi khi xử lý ảnh mới:', changeError);
+            }
+        });
+    } catch (error) {
+        console.error('Lỗi khi tải trang:', error);
+    }
+});
+</script>
+	
+</body>
+</html>

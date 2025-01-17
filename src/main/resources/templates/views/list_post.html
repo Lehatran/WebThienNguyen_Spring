@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách sản phẩm</title>
+    <link rel="stylesheet" href="/css/list_post.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/navbar.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <div th:replace="~{views/navbar :: navbar}"></div>
+      <div th:replace="~{views/homePage.html}"></div>
+    <div class="body">
+        <!-- Lặp qua từng danh mục -->
+        <div th:each="categoryEntry : ${listpost}" class="category-section">
+            <!-- Hiển thị tên danh mục -->
+            <h2 class="category-title" th:text="${categoryEntry.key}">Tên danh mục</h2>
+            
+            <!-- Hiển thị sản phẩm -->
+            <div class="container">
+                <div th:each="userEntry : ${categoryEntry.value}">
+                    <!-- Hiển thị các sản phẩm của từng người dùng trong cùng một dòng -->
+                    <div class="container">
+                        <a th:href="@{/product/{id}(id=${product.id})}" th:each="product : ${userEntry.value}" class="item">
+                            <div class="inf_user">
+                                <!-- Hiển thị tên người dùng -->
+                                <p th:text="${userEntry.key}">Tên người dùng</p>
+                            </div>
+                            <div class="product">
+                                <div class="img">
+                                    <!-- Hình ảnh sản phẩm -->
+                                    <!-- <img th:src="'/images/' + ${product.img}" alt="Product Image" /> -->
+                                    
+								        <img th:src="${product.images[0]}" alt="Product Image" />
+								    
+                                    <!-- Nút yêu thích -->
+                                    <button class="icon_favorite" >
+									    <!-- <img src="/images/heart_border.svg" alt="Not Liked" /> -->
+									</button>
+
+                                </div>
+                                <div class="inf_product">
+                                    <!-- Thông tin sản phẩm -->
+                                    <p class="name" th:text="${product.name}">Tên sản phẩm</p>
+                                    <div class="price-day">
+                                    	<div class="price">
+                                    		<img src="/images/icon_money.png"/>
+                                    		<p class="price" th:text="${product.price}">Giá sản phẩm</p>
+                                    	</div>
+                                    	<div class="day">
+                                    		<img src="images/icon_day.png"/>
+                                    		<p th:text="${#dates.format(product.create_day, 'yyyy-MM-dd')}">Ngày tạo<p>
+                                    		
+                                    		<!-- <p class="time" th:text="${product.create_day}">Ngày tạo</p> -->
+                                    	</div>
+                                    </div>
+                                    <div class="address">
+                                    	<img src="/images/icon_address.jpg"/>
+                                    	<p th:text="${product.id_address.province}">Dia chi</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

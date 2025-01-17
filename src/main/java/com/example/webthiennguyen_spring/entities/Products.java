@@ -1,7 +1,9 @@
 package com.example.webthiennguyen_spring.entities;
 
-import java.sql.Date;
+import java.util.Date;
+import java.util.Arrays;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 @Entity
 public class Products {
 
@@ -18,44 +21,60 @@ public class Products {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(name = "name", nullable = true)
+	@Column(name = "name", nullable = false)
 	private String name;
 	
 
-	@Column(name = "description", nullable = true)
+	@Column(name = "description", nullable = false)
 	private String description;
 	
-	@Column(name = "price", nullable = true)
+	@Column(name = "price", nullable = false)
 	private int price;
 	
-	@Column(name = "status", nullable = true)
-	private int status;
+	@Column(name = "status", nullable = false)
+	private String status;
 	
-	//@Column(name = "id_category", nullable = true)
+	
 	@ManyToOne
 	@JoinColumn(name = "id_category", nullable = false, referencedColumnName = "id") 
 	private Category id_category;
 	
-	@Column(name = "create_day", nullable = true)
+	@Column(name = "create_day", nullable = false)
 	private  Date create_day;
-	
-
-	//@Column(name = "id_address", nullable = true)
+		
 	@ManyToOne
 	@JoinColumn(name = "id_address", nullable = false, referencedColumnName = "id") 
 	private Address id_address;
 	
-//	@Column(name = "id_user", nullable = true)
+
 	@ManyToOne
 	@JoinColumn(name = "id_user", nullable = false, referencedColumnName = "id") 
 	private User id_user;
 	
-	@Column(name = "img", nullable = true)
-	private String img;
+	@Column(name = "img", nullable = false, columnDefinition = "TEXT")
+	private String imgPaths;
 	
-	@Column(name = "isExist", nullable = true)
+	@Column(name = "isExist", nullable = false)
 	private boolean isExist;
 	
+	@Transient
+	private String[] images;
+
+	public String getImgPaths() {
+		return imgPaths;
+	}
+
+	public void setImgPaths(String imgPaths) {
+		this.imgPaths = imgPaths;
+	}
+	
+	public String[] getImages() {
+		return images;
+	}
+
+	public void setImages(String[] images) {
+		this.images = images;
+	}
 
 	public int getId() {
 		return id;
@@ -89,11 +108,11 @@ public class Products {
 		this.price = price;
 	}
 
-	public int getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -129,14 +148,6 @@ public class Products {
 		this.id_user = id_user;
 	}
 
-	public String getImg() {
-		return img;
-	}
-
-	public void setImg(String img) {
-		this.img = img;
-	}
-
 	public boolean isExist() {
 		return isExist;
 	}
@@ -144,6 +155,8 @@ public class Products {
 	public void setExist(boolean isExist) {
 		this.isExist = isExist;
 	}
+
+	
 
 	
 

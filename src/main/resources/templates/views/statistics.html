@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<head>
+    <title>Product Statistics</title>
+    <link rel="stylesheet" href="/css/statistics.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/navbar.js"></script>
+    <link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+	rel="stylesheet">
+</head>
+<body>
+    <div th:replace="~{views/navbar :: navbar}"></div>
+    <div class="container">
+        <div class="navbar_statics">
+            <div class="logo">
+                <img src="/images/logo_statics.png"/>
+                <h1>STATCOUNTER</h1>
+            </div>
+            <div class="buttonStatistics">
+	            <form class="statisticsByMonth" th:action="@{/statistics-by-month}" method="post">
+			        <label for="year">Chọn năm:</label>
+					<select id="year" name="year" onchange="toggleSubmitButton()">
+						<option th:selected="${year}" th:text="${year}"></option>
+					</select>
+			        <button type="submit" id="submitButton">Thống kê theo năm</button>
+			    </form>
+			    <form th:action="@{/statistics/category}" method="post">
+			        <button type="submit">Thống kê theo danh mục</button>
+			    </form>
+			</div>
+		    <!-- Bảng thống kê -->
+		    <div th:if="${statistics != null}">
+		    <div id="statistics" th:text="${statistics}" style="display: none"></div>
+		        <canvas class="chart" id="categoryChart" width="400" height="200"></canvas>
+		    </div>
+		    <div th:if="${statisticsMonth != null}">
+		    	<div id="statisticsMonth" th:text="${statisticsMonth}" style="display: none"></div>
+			    <canvas class="chart" id="monthChart" width="400" height="200"></canvas>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script>
+
+    // Lấy phần tử select
+    const yearSelect = document.getElementById('year');
+    const minYear = 2000;
+    const maxYear = 2025;
+
+    // Tạo danh sách năm
+    for (let year = maxYear; year >= minYear; year--) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+    }
+    
+    function toggleSubmitButton() {
+        const yearSelect = document.getElementById("year");
+        const submitButton = document.getElementById("submitButton");
+
+        // Kiểm tra nếu giá trị được chọn là hợp lệ (không phải là option trống)
+        if (yearSelect.value !== "") {
+            submitButton.disabled = false;  // Kích hoạt nút khi có năm được chọn
+        } else {
+            submitButton.disabled = true;   // Vô hiệu hóa nút khi chưa chọn năm
+        }
+    }
+
+    // Đảm bảo trạng thái nút đúng khi tải trang
+    document.addEventListener("DOMContentLoaded", toggleSubmitButton);
+    
+	const statisticsMonthElement = document.getElementById('statisticsMonth');
+	const statisticsCategoryElement = document.getElementById('statistics');
+    if(statisticsMonthElement){
+	    // Lấy giá trị chuỗi từ thẻ div
+	    const statisticsMonthText = statisticsMonthElement.textContent.trim();
+	    
+	 // Phân tách giá trị để lấy danh sách tháng và số lượng sản phẩm
+	    const statisticsMonthPairs = statisticsMonthText.split(',').map(item => item.split('='));
+	    const months = statisticsMonthPairs.map(pair => `Tháng ${pair[0].trim().replace(/[{}]/g, '')}`);
+	    const productCounts = statisticsMonthPairs.map(pair => pair[1].trim());
+	
+	    // Vẽ biểu đồ nếu dữ liệu hợp lệ
+	    const ctx = document.getElementById('monthChart').getContext('2d');
+	    const monthChart = new Chart(ctx, {
+	        type: 'bar',  // Biểu đồ cột
+	        data: {
+	            labels: months,  // Dữ liệu tháng
+	            datasets: [{
+	                label: 'Số lượng sản phẩm',
+	                data: productCounts,  // Dữ liệu số lượng sản phẩm
+	                backgroundColor: 'rgba(235, 141, 58, 0.2)',
+	                borderColor: 'rgb(235, 131, 40, 0.5)',
+	                borderWidth: 1
+	            }]
+	        },
+	        options: {
+	            responsive: true,
+	            scales: {
+	                y: {
+	                    beginAtZero: true
+	                }
+	            }
+	        }
+	    }); 
+    }
+
+	//const statisticsCategoryElement = document.getElementById('statistics');
+    if(statisticsCategoryElement){
+    	// Lấy giá trị chuỗi từ thẻ div
+        const statisticsCategoryText = statisticsCategoryElement.textContent.trim();
+        
+     // Phân tách giá trị để lấy danh sách tháng và số lượng sản phẩm
+        const statisticsCategoryPairs = statisticsCategoryText.split(',').map(item => item.split('='));
+        const categories = statisticsCategoryPairs.map(pair => pair[0].trim().replace(/[{}]/g, ''));
+        const productCategoryCounts = statisticsCategoryPairs.map(pair => pair[1].trim().replace(/[^\d]/g, '')); 
+
+        console.log("Categories:", categories);
+        console.log("Product Counts:", productCategoryCounts);
+        // Vẽ biểu đồ nếu dữ liệu hợp lệ
+        const ctx_category = document.getElementById('categoryChart').getContext('2d');
+        const categoryChart = new Chart(ctx_category, {
+            type: 'bar',  // Biểu đồ cột
+            data: {
+                labels: categories,  // Dữ liệu tháng
+                datasets: [{
+                    label: 'Số lượng sản phẩm',
+                    data: productCategoryCounts,  // Dữ liệu số lượng sản phẩm
+                    backgroundColor: 'rgba(235, 141, 58, 0.2)',
+                    borderColor: 'rgb(235, 131, 40, 0.5)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+    
+
+</script> 
+

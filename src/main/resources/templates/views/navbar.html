@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Navbar</title>
+<link rel="stylesheet" href="/css/navbar.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+	rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/navbar.js"></script>
+</head>
+<body>
+	<div class="container_navbar" th:fragment="navbar">
+		<div class="navbar">
+			<a class="logo" href="/list-post"> <img
+				src="/images/logo.png" alt="Logo" />
+				<p>ThienNguyen</p>
+			</a>
+
+			<div class="post">
+    <a href="/products/create" th:href="@{/products/create}"  th:if="${session.user != null}"
+       th:classappend="${session.user.role == true ? 'disabled' : ''}" 
+       th:attr="disabled=${session.user.role == true ? 'disabled' : null}">
+        <button th:disabled="${session.user.role == true}">
+            <p class="text_add">Thêm bài đăng</p>
+        </button>
+    </a>
+</div>
+
+
+
+			<div class="input_search">
+				<form action="/search" method="get">
+					<input type="text" name="inf_search"
+						placeholder="Nhập nội dung tìm kiếm" />
+					<button class="button_search">
+						<img src="/images/search.webp" />
+					</button>
+				</form>
+			</div>
+
+			<div class="account">
+				<button id="accountButton" th:if="${session.user != null}" >
+					<img src="/images/icon_account.png">
+					<p  th:text="${session.user.name}">Account</p>
+					<!-- <p th:if="${session.user == null}">Account</p> -->
+				</button>
+
+				<div class="button_intro visible hidden" id="dropdownMenu">
+					<div class="intro_inf">
+						<p class="text_register">Đăng bài</p>
+						<p class="text_des">Đóng góp tấm lòng của bạn</p>
+						<a href="/products/create"  th:if="${session.user != null}"
+						   th:href="@{/products/create}" 
+						   th:classappend="${session.user.role == true ? 'disabled' : ''}">
+						    <button th:disabled="${session.user.role == true}">Tại đây!</button>
+						
+						</a> <img src="/images/thiennguyen.png" alt="Logo" />
+					</div>
+
+					<!-- User Actions -->
+					<div class="buttons user-actions" th:if="${session.user != null and session.user.role == false}">
+						<a href="/products/create" >
+							<button>
+								<i class="fa-solid fa-pen"></i>
+								<p>Đăng bài</p>
+							</button>
+						</a> <a href="/list-products-by-user">
+							<button>
+								<i class="fa-solid fa-list"></i>
+								<p>Quản lý tin đăng</p>
+							</button>
+						</a> <a href="/edit-profile">
+							<button>
+								<i class="fa-solid fa-user"></i>
+								<p>Quản lý tài khoản</p>
+							</button>
+						</a>
+						<div id="notification" style="display: none; color: green; font-weight: bold;"></div>
+						
+					<form id="logoutForm" action="/logout" method="post">
+
+						<button class="logout" onclick="confirmLogout(event)">
+						    <p>Đăng xuất</p>
+						    <i class="fa fa-sign-out" aria-hidden="true"></i>
+						</button>
+						</form>
+						</div>
+
+
+					<!-- Admin Actions -->
+					<div class="buttons admin-actions" th:if="${session.user != null and session.user.role == true}">
+						<a href="list-post-not-approve">
+							<button>
+								<i class="fa-solid fa-bars"></i>
+								<p>Duyệt bài đăng</p>
+							</button>
+						</a> <a href="/list-user">
+							<button>
+								<i class="fa fa-address-card" aria-hidden="true"></i>
+								<p>Xem danh sách user</p>
+							</button>
+						</a> <a href="/statistics">
+							<button>
+								<i class="fa fa-signal" aria-hidden="true"></i>
+								<p>Thống kê</p>
+							</button>
+						</a>
+						<div id="notification" style="display: none; color: green; font-weight: bold;"></div>
+					
+						<form id="logoutForm" action="/logout" method="post">
+
+						<button class="logout" onclick="confirmLogout(event)">
+						    <p>Đăng xuất</p>
+						    <i class="fa fa-sign-out" aria-hidden="true"></i>
+						</button>
+						</form>
+						
+					</div>
+				</div>
+			</div>
+
+			<div class="account loginText"  th:if="${session.user == null}">
+			<a href ="/login">
+				<button id="loginButton">
+					<img src="/images/icon_login.png" alt="Login" />
+					<p class="login" id="loginText">Login</p>
+				</button>
+				</a>
+			</div>
+		</div>
+	</div>
+</body>
+
+
+
+</html>
+

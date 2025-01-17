@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/css/register.css" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+
+<title>Register</title>
+</head>
+
+<body>
+	<header class="register-header">
+		<h1 class="logo">ThienNguyen</h1>
+	</header>
+	<div class="register-container">
+
+		<main class="register-content">
+			<div class="register">
+				<div class="form-container">
+					<h2>Tạo tài khoản ThienNguyen của bạn</h2>
+
+					<!-- Hiển thị thông báo lỗi nếu có -->
+					<div th:if="${errorMessage != null}" class="alert alert-danger"
+						style="color: red;">
+						<p th:text="${errorMessage}"></p>
+					</div>
+
+					<div th:if="${successMessage != null}" class="alert alert-success"
+						style="color: green;">
+						<p th:text="${successMessage}"></p>
+					</div>
+
+					<form action="/register" method="POST" th:object="${user}"
+						class="register-form">
+
+						<div class="form-group">
+							<label for="name">Họ Tên *</label> <input type="text"
+								th:field="*{name}" name="name" id="name" required>
+						</div>
+						<div class="form-group">
+							<label for="email">Email *</label> <input type="email"
+								th:field="*{email}" name="email" id="email" required>
+						</div>
+						<div class="form-group">
+							<label for="birthday">Ngày Sinh *</label> <input type="date"
+								th:field="*{dateOfBirth}" name="birthday" id="birthday" required>
+						</div>
+						<div class="form-group">
+							<label for="phoneNumber">Số Điện Thoại *</label> <input
+								type="text" th:field="*{phoneNumber}" name="phoneNumber"
+								id="phoneNumber" required>
+						</div>
+						<div class="form-group">
+							<label for="userName">Tên Người Dùng *</label> <input type="text"
+								th:field="*{username}" name="userName" id="userName" required>
+						</div>
+						<div class="form-group">
+							<label for="password">Mật Khẩu *</label>
+							<div class="password-container">
+								<input type="password" th:field="*{password}" name="password"
+									id="password" required> <i
+									class="fas fa-eye toggle-password" data-target="#password"></i>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="password_confirmation">Xác Nhận Mật Khẩu *</label>
+							<div class="password-container">
+								<input type="password" name="password_confirmation"
+									id="password_confirmation" required> <i
+									class="fas fa-eye toggle-password"
+									data-target="#password_confirmation"></i>
+							</div>
+						</div>
+						<button type="submit" class="btn-submit">Đăng ký</button>
+					</form>
+					<a class="hrlogin" href="/login">Bạn đã có tài khoản? Đăng nhập</a>
+				</div>
+			</div>
+			<div class="carousel">
+				<div class="carousel-container">
+					<!-- Cột 1 (Cuộn nhanh) -->
+					<div class="column column-1">
+						<div class="items">
+							<div class="item" style="background-color: rgb(242, 181, 207)">
+								<img src="/images/icon_house.png" />
+							</div>
+							<div class="item" style="background-color: rgb(244, 225, 193)">
+								<img src="/images/icon_oto.png" />
+							</div>
+							<div class="item" style="background-color: rgb(195, 244, 252)">
+								<img src="/images/icon_phone.png" />
+							</div>
+						</div>
+					</div>
+					<!-- Cột 2 (Cuộn chậm) -->
+					<div class="column column-2">
+						<div class="items">
+							<div class="item" style="background-color: rgb(238, 226, 187)">
+								<img src="/images/icon_ao.png" />
+							</div>
+							<div class="item" style="background-color: rgb(182, 225, 233)">
+								<img src="/images/icon_book.png" />
+							</div>
+							<div class="item" style="background-color: rgb(197, 249, 192)">
+								<img src="/images/icon_dochoi.png" />
+							</div>
+						</div>
+					</div>
+					<!-- Cột 3 (Cuộn vừa) -->
+					<div class="column column-3">
+						<div class="items">
+							<div class="item" style="background-color: rgb(224, 248, 245)">
+								<img src="/images/icon_tui.png" />
+							</div>
+							<div class="item" style="background-color: rgb(250, 210, 208)">
+								<img src="/images/icon_ghe.png" />
+							</div>
+							<div class="item" style="background-color: rgb(249, 224, 180)">
+								<img src="/images/icon_oto.png" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+	<script>
+		
+		// Script để ẩn/hiện mật khẩu
+		document
+				.addEventListener(
+						'DOMContentLoaded',
+						function() {
+							document
+									.querySelectorAll('.toggle-password')
+									.forEach(
+											function(togglePasswordIcon) {
+												const passwordField = document
+														.querySelector(togglePasswordIcon
+																.getAttribute('data-target'));
+
+												// Thiết lập trạng thái ban đầu là ẩn mật khẩu
+												passwordField.type = 'password';
+
+												// Đảm bảo icon bắt đầu là "eye-slash"
+												togglePasswordIcon.classList
+														.add('fa-eye-slash');
+											});
+
+							document
+									.querySelectorAll('.toggle-password')
+									.forEach(
+											function(togglePasswordIcon) {
+												togglePasswordIcon
+														.addEventListener(
+																'click',
+																function() {
+																	const passwordField = document
+																			.querySelector(this
+																					.getAttribute('data-target'));
+																	const type = passwordField.type === 'password' ? 'text'
+																			: 'password';
+																	passwordField.type = type;
+
+																	// Thay đổi icon mắt
+																	//    this.classList.toggle('fa-eye');   // Đổi sang biểu tượng "eye" khi hiển thị mật khẩu
+																	this.classList
+																			.toggle('fa-eye-slash'); // Đổi sang biểu tượng "eye-slash" khi ẩn mật khẩu
+																});
+											});
+						});
+	</script>
+
+
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		var successMessage = /*[[${successMessage}]]*/'';
+		var errorMessage = /*[[${errorMessage}]]*/'';
+
+		if (successMessage !== '' && successMessage !== null) {
+			alert(successMessage); // Hiển thị thông báo thành công
+			// Sau khi nhấn OK, sẽ chuyển hướng đến trang đăng nhập
+			window.location.href = "/login"; // Chuyển hướng sang trang đăng nhập
+		}
+
+		if (errorMessage !== '' && errorMessage !== null) {
+			alert(errorMessage); // Hiển thị thông báo lỗi nếu có
+		}
+		/*]]>*/
+	</script>
+
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Đăng nhập</title>
+<link rel="stylesheet" href="/css/login.css" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+
+<body>
+	<header class="register-header">
+
+		<h1 class="logo">ThienNguyen</h1>
+	</header>
+	<div class="register-container">
+
+		<main class="register-content">
+			<div class="register">
+				<div class="form-container">
+					<h2>Đăng nhập tài khoản ThienNguyen của bạn</h2>
+					
+					<div id="messageBox" class="message-box hidden">
+					    <p id="messageContent" class="message-content"></p>
+					</div>
+
+					
+					<form action="/login" method="POST" class="register-form">
+
+						<div class="form-group">
+							<label for="email">Email *</label> <input type="email"
+								name="email" id="email" required>
+						</div>
+						<div class="form-group">
+							<label for="password">Mật Khẩu *</label>
+							<div class="password-container">
+								<input type="password" name="password" id="password" required>
+								<i class="fas fa-eye-slash toggle-password" id="toggle-password"></i>
+							</div>
+						</div>
+						<button type="submit" class="btn-submit">Đăng nhập</button>
+					</form>
+					<a class="hrlogin" href="/register">Bạn chưa có tài khoản? Đăng
+						ký</a>
+				</div>
+			</div>
+			<div class="carousel">
+				<div class="carousel-container">
+					<!-- Cột 1 (Cuộn nhanh) -->
+					<div class="column column-1">
+						<div class="items">
+							<div class="item" style="background-color: rgb(242, 181, 207)">
+								<img src="/images/icon_house.png" />
+							</div>
+							<div class="item" style="background-color: rgb(244, 225, 193)">
+								<img src="/images/icon_oto.png" />
+							</div>
+							<div class="item" style="background-color: rgb(195, 244, 252)">
+								<img src="/images/icon_phone.png" />
+							</div>
+						</div>
+					</div>
+					<!-- Cột 2 (Cuộn chậm) -->
+					<div class="column column-2">
+						<div class="items">
+							<div class="item" style="background-color: rgb(238, 226, 187)">
+								<img src="/images/icon_ao.png" />
+							</div>
+							<div class="item" style="background-color: rgb(182, 225, 233)">
+								<img src="/images/icon_book.png" />
+							</div>
+							<div class="item" style="background-color: rgb(197, 249, 192)">
+								<img src="/images/icon_dochoi.png" />
+							</div>
+						</div>
+					</div>
+					<!-- Cột 3 (Cuộn vừa) -->
+					<div class="column column-3">
+						<div class="items">
+							<div class="item" style="background-color: rgb(224, 248, 245)">
+								<img src="/images/icon_tui.png" />
+							</div>
+							<div class="item" style="background-color: rgb(250, 210, 208)">
+								<img src="/images/icon_ghe.png" />
+							</div>
+							<div class="item" style="background-color: rgb(249, 224, 180)">
+								<img src="/images/icon_oto.png" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+
+	<script>
+		// JavaScript để toggle mật khẩu hiển thị/ẩn
+		document.getElementById('toggle-password').addEventListener('click',
+				function() {
+					var passwordField = document.getElementById('password');
+					var icon = document.querySelector('#toggle-password i');
+
+					if (passwordField.type === "password") {
+						passwordField.type = "text";
+						icon.classList.remove("fa-eye-slash");
+						icon.classList.add("fa-eye");
+					} else {
+						passwordField.type = "password";
+						icon.classList.remove("fa-eye");
+						icon.classList.add("fa-eye-slash");
+					}
+				});
+	</script>
+	
+	
+	<script th:inline="javascript">
+    /*<![CDATA[*/
+    var successMessage = /*[[${successMessage}]]*/ ''; // Thông báo thành công
+    var errorMessage = /*[[${errorMessage}]]*/ '';     // Thông báo lỗi
+
+    var messageBox = document.getElementById("messageBox");
+    var messageContent = document.getElementById("messageContent");
+
+    if (successMessage !== '' && successMessage !== null) {
+        messageBox.classList.remove("hidden");
+        messageBox.classList.add("success");
+        messageContent.textContent = successMessage;
+
+        // Chuyển hướng sau 3 giây
+        setTimeout(function () {
+            window.location.href = "/list-post";
+        }, 500);
+    } else if (errorMessage !== '' && errorMessage !== null) {
+        messageBox.classList.remove("hidden");
+        messageBox.classList.add("error");
+        messageContent.textContent = errorMessage;
+    }
+    /*]]>*/
+</script>
+	
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+@charset "UTF-8";
+
+h1, table{
+	margin-left: 150px;
+}
+
+h1{
+	margin-top: 100px;
+}
+
+.img{
+	display: flex;
+}
+
+img{
+	width: 50px;
+	height: 50px;
+}
+
+table {
+    border-collapse: collapse;  /* Gộp các đường viền của bảng thành một */
+    width: 80%;  /* Chiều rộng toàn bộ bảng */
+}
+
+th, td {
+    padding: 10px 20px;
+    border: 1px solid grey;  /* Đặt đường viền giữa các ô */
+}
+
+th{
+	color: #fff;
+	background-color: orange;
+}
+
+.approved{
+	color: green;
+}
+
+.not-approved{
+	color: red;
+}
+
+.button_group{
+	display: flex;
+	gap: 10px;
+}
+
+
+button{
+	width:50px;
+	height: 30px;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+
+}
+
+.edit{
+	background-color: blue;
+	text-transform: none;
+    border-radius: 8px;
+    width: 79px;
+}
+
+.delete{
+	background-color: red;
+text-transform: none;
+    border-radius: 8px;
+    width: 79px;
+}
+
+
+.topbar {
+    background: white;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.topbar .nav-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #4e73df;
+    margin-left: 20px;
+}
+
+.topbar .nav-link img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+.topbar .nav-link span {
+    margin-right: 10px;
+    color: #6c757d;
+}
+
+.topbar .back {
+    margin-right: auto; /* Đẩy icon sang bên phải */
+    font-size: 20px; /* Kích thước icon */
+    color: #4e73df; /* Màu sắc icon */
+    text-decoration: none; /* Xóa gạch chân */
+        margin-left: 25px;
+}
+
+/* Hiệu ứng khi rê chuột qua icon "back" */
+.topbar .back:hover {
+    color: #2e59d9; /* Màu khi hover */
+    transform: scale(1.1); /* Phóng to nhẹ */
+}
+
+
+
+
+
+
+
+
+
+

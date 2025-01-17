@@ -1,0 +1,272 @@
+.container{
+    margin: 40px 200px;
+}
+
+.container_inf{
+    display: flex;
+    gap:20px;
+}
+
+.inf_product {
+    /* text-align: center; */
+    position: relative;
+    margin-top: -10px;
+}
+
+.inf_product .img{
+    position: relative;
+    display: flex; /* Kích hoạt flexbox */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center; 
+    width: 600px;
+    height: 320px;
+    background-color: rgb(230, 231, 232);
+    border-radius: 15px;
+    margin-top: 10px;
+}
+
+.inf_product .img img {
+	position: absolute;
+	width: 230px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.inf_product .img .icon_favorite {
+    position: relative;
+    cursor: pointer;
+    background-color: #fff;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    z-index:5;
+    margin-left:-40px;
+    margin-top: -260px;
+}
+
+.inf_product .img .icon_favorite:hover{
+	background-color:#f6f9f9;
+}
+
+.inf_product .img .icon_favorite img{
+	position: relative;
+	width: 15px;
+	height: 15px;
+	margin-top:3px;
+}
+
+.pro_des{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.pro_address{
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: -10px;
+}
+
+.price-day{
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: -20px;
+}
+
+.price-day .price,
+.price-day .day{
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.price-day .price img,
+.price-day .day img{
+    width: 20px;
+    height: 20px;
+}
+
+.inf_user{
+    width: 350px;
+    height: 200px;
+    border: 1px solid rgb(194, 192, 192);
+    text-align: center;
+    border-radius: 10px;
+}
+
+.user_name{
+    font-size: 20px;
+    font-weight: 700;
+}
+
+a{
+    text-decoration: none;
+    color: #fff;
+}
+
+.button_contact{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px
+}
+
+.call_button{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.button_phone p{
+    color: #fff;
+}
+
+.icon_phone{
+    width: 20px;
+    height: 20px;
+}
+
+.button_zalo,
+.button_phone{
+    width: 280px;
+    height: 40px;
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+    font-weight: 700;
+    background-color: rgb(241, 150, 30);
+}
+
+
+.button_phone{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background-color: rgb(17, 112, 82);
+}
+
+.detail{
+    border-bottom: 1px solid rgb(224, 222, 222);
+}
+
+.intro{
+    margin-top: 50px;
+    border-top: 1px solid rgb(224, 222, 222);
+}
+
+.web_name,
+.cash,
+.tool{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cash,
+.tool{
+    margin-top: -10px;
+}
+
+.web_name p{
+    font-size: 20px;
+    font-weight: 700;
+    color: rgb(214, 104, 7);
+}
+
+.cash p,
+.tool p{
+    font-size: 16px;
+}
+
+.des_pro{
+    border-top: 1px solid rgb(224, 222, 222);
+    border-bottom: 1px solid rgb(224, 222, 222);
+}
+
+.des_pro p{
+    font-size: 16px;
+}
+
+.des_pro p:first-child{
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.inf_maintain{
+    border-bottom: 1px solid rgb(224, 222, 222);
+    display: flex;
+    gap: 50px;
+}
+
+.inf_maintain .status_title,
+.inf_maintain .category_title{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.inf_maintain img{
+    width: 20px;
+    height: 20px;
+}
+
+.maintain>p{
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.maintain .status_title p,
+.maintain .category_title p{
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.maintain .inf_status>p,
+.maintain .inf_category>p{
+    margin-left: 40px;
+    font-weight: 700;
+}
+
+.map .inf{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.map .inf img{
+    width: 20px;
+    height: 20px;
+}
+
+#image-slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 400px;
+    margin: 20px;
+}
+
+#image-slider button {
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #fff;
+    border: 0.4px solid grey;
+    color: #2e6eef;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+#image-slider button:hover {
+    background-color: #94cdeb;
+}
+
+#current-image{
+	
+}
+
+

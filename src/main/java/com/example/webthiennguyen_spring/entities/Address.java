@@ -13,14 +13,14 @@ public class Address {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id; 
 	
-	@Column(name = "province", nullable = true)
+	@Column(name = "province", nullable = false)
 	private String province;
 	
 
-	@Column(name = "district", nullable = true)
+	@Column(name = "district", nullable = false)
 	private String district;
 	
-	@Column(name = "ward", nullable = true)
+	@Column(name = "ward", nullable = false)
 	private String ward;
 
 	public int getId() {

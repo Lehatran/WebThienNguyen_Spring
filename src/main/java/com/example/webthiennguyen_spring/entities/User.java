@@ -1,12 +1,15 @@
 package com.example.webthiennguyen_spring.entities;
 
 import java.sql.Date;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class User {
@@ -16,27 +19,45 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column(name = "name", nullable = true)
+	@Column(name = "name", nullable = false)
 	private String name;
 
-	@Column(name = "dateOfBirth", nullable = true)
+	@Column(name = "dateOfBirth", nullable = false)
 	private Date dateOfBirth;
 	
-	@Column(name = "phoneNumber", nullable = true)
+	@Column(name = "phoneNumber", nullable = false, length=10)
 	private String phoneNumber;
 
-	@Column(name = "email", nullable = true)
+	@Column(name = "email", nullable = false)
 	private String email;
 	
-	@Column(name = "username", nullable = true)
+	@Column(name = "username", nullable = false)
 	private String username;
 	
-	@Column(name = "password", nullable = true)
+	@Column(name = "password", nullable = false)
 	private String password;
 	
-	@Column(name = "role", nullable = true)
+	@Column(name = "role", nullable = false)
 	private boolean role;
 	
+	
+    // Mối quan hệ OneToMany với Products
+    @OneToMany(mappedBy = "id_user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Products> products;
+
+
+	public User(int id, String name, Date dateOfBirth, String phoneNumber, String email, String username,
+			String password, boolean role) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.dateOfBirth = dateOfBirth;
+		this.phoneNumber = phoneNumber;
+		this.email = email;
+		this.username = username;
+		this.password = password;
+		this.role = role;
+	}
 	
 	public int getId() {
 		return id;
@@ -101,6 +122,10 @@ public class User {
 	public void setRole(boolean role) {
 		this.role = role;
 	}
-
+	
+	public User()
+	{
+		
+	}
 	
 }
